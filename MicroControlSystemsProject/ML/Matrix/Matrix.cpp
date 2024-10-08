@@ -1,4 +1,6 @@
 #include "Matrix.h"
+
+#include <iomanip>
 #include <iostream>
 
 float Matrix::Get(const int Row, const int Col)
@@ -21,9 +23,23 @@ void Matrix::Set(const int Row, const int Col, float Input)
 }
 
 void Matrix::PrintMatrix() {
+    std::cout << "+";
+    for (int j = 0; j < Cols; j++) {
+        std::cout << std::setw(12) << std::setfill('-') << "+";
+    }
+    std::cout << std::endl;
+
     for (int i = 0; i < Rows; i++) {
+        std::cout << "|"; // Start of the row
         for (int j = 0; j < Cols; j++) {
-            std::cout << Get(i, j) << " ";
+            std::cout << std::setw(10) << std::setfill(' ') << Get(i, j) << " |"; // Print each element
+        }
+        std::cout << std::endl;
+
+        // Print the separator after each row
+        std::cout << "+";
+        for (int j = 0; j < Cols; j++) {
+            std::cout << std::setw(12) << std::setfill('-') << "+";
         }
         std::cout << std::endl;
     }
