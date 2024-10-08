@@ -2,6 +2,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <stdexcept>
 
 float Matrix::Get(const int Row, const int Col)
 {
@@ -75,4 +76,41 @@ Matrix matmul(Matrix& a, Matrix& b) {
     }
     
     return ResultingMatrix;
+}
+
+Matrix Vstack(Matrix& a, Matrix& b){
+    if(a.GetCols() != b.GetCols() || a.GetRows() != b.GetRows()){
+        throw std::domain_error("Matrix dimensions are not equal");
+    }
+
+    std::vector<float> Adata = a.GetData();
+    std::vector<float> Bdata = b.GetData();
+
+    for(int i=0;i< b.GetCols() * b.GetRows() ;i++){
+        Adata.push_back(Bdata[i]);
+    }
+
+    Matrix hstacked(a.GetRows() + b.GetRows(), a.GetCols(), Adata);
+
+    return hstacked;
+}
+
+Matrix Hstack(Matrix& a, Matrix& b){
+    if(a.GetCols() != b.GetCols() || a.GetRows() != b.GetRows()){
+        throw std::domain_error("Matrix dimension are not equal");
+    }
+
+    std::vector<float> Bdata = b.GetData();
+    std::vector<float> Cdata = a.GetData();
+
+    for(int i=0; i<b.GetCols() * b.GetRows(); i+=b.GetCols()){
+        
+        for(int j=0;j<b.GetCols();j++){
+            Cdata.push_back(Bdata[i+j]);
+        }
+    }
+
+    Matrix Hstacked(a.GetRows(), 2*a.GetCols(), Cdata);
+
+    return Hstacked;
 }

@@ -36,11 +36,13 @@ class Matrix{
         void PrintMatrix();
 
         //Get Rows/Cols
-        float GetRows(){return Rows;}
-        float GetCols(){return Cols;}
+        float              GetRows(){return Rows;}
+        float              GetCols(){return Cols;}
+        std::vector<float> GetData(){return Data;}
 };
 
 float dotproduct(Matrix& a, Matrix& b, int Col, int Row);
 Matrix matmul(Matrix& a, Matrix& b);
-
+Matrix Hstack(Matrix& a, Matrix& b);
+Matrix Vstack(Matrix& a, Matrix& b);
 #endif
