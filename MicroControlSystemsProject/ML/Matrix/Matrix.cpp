@@ -79,7 +79,7 @@ Matrix matmul(Matrix& a, Matrix& b) {
 }
 
 Matrix Vstack(Matrix& a, Matrix& b){
-    if(a.GetCols() != b.GetCols() || a.GetRows() != b.GetRows()){
+    if(a.GetCols() != b.GetCols()){
         throw std::domain_error("Matrix dimensions are not equal");
     }
 
@@ -96,21 +96,38 @@ Matrix Vstack(Matrix& a, Matrix& b){
 }
 
 Matrix Hstack(Matrix& a, Matrix& b){
-    if(a.GetCols() != b.GetCols() || a.GetRows() != b.GetRows()){
+    if(a.GetRows() != b.GetRows()){
         throw std::domain_error("Matrix dimension are not equal");
     }
 
-    std::vector<float> Bdata = b.GetData();
-    std::vector<float> Cdata = a.GetData();
+    std::vector<float> Adata = a.GetData();
+    int aCols = a.GetCols();
 
-    for(int i=0; i<b.GetCols() * b.GetRows(); i+=b.GetCols()){
+    std::vector<float> Bdata = b.GetData();
+    int bCols = b.GetCols();
+    
+    std::vector<float> Cdata;
+
+    int CdataSize = Adata.size() + Bdata.size();
+
+    int bCounter = 0;
+    int aCounter = 0;
+
+    while(Cdata.size() != CdataSize){
         
-        for(int j=0;j<b.GetCols();j++){
-            Cdata.push_back(Bdata[i+j]);
+        for(int j=0;j<aCols;j++){
+            Cdata.push_back(Adata[aCounter]);
+            aCounter++;
         }
+
+        for(int j=0;j<bCols;j++){
+            Cdata.push_back(Bdata[bCounter]);
+            bCounter++;
+        }
+        
     }
 
-    Matrix Hstacked(a.GetRows(), 2*a.GetCols(), Cdata);
+    Matrix Hstacked(a.GetRows(), a.GetCols() + b.GetCols(), Cdata);
 
     return Hstacked;
 }
