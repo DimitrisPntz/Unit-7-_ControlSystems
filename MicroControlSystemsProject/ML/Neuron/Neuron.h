@@ -14,7 +14,6 @@ class Neuron{
         //Weights, bias and lr
         Matrix Weights;
         float bias;
-        float lr;
 
         //Activation functions
         ActivPntr ActivFn; 
@@ -22,10 +21,12 @@ class Neuron{
         std::string ActivationFunction;
 
     public:
-        Neuron(int InputSize, const std::string ActivFn, float lr=0.01, float min=-1.0f, float max=1.0f);
+        Neuron(int InputSize, const std::string ActivFn, float min=-1.0f, float max=1.0f);
 
         //Neuron Info
         void info();
+
+        float GetOutput(){return Output;}
 
         //Forward Pass
         float forward(Matrix& Inputs){Output = ActivFn(matmul(Weights, Inputs).Get(0, 0) + bias); return Output;}

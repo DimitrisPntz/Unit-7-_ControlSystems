@@ -112,7 +112,6 @@ Matrix Hstack(Matrix& a, Matrix& b){
 
     int bCounter = 0;
     int aCounter = 0;
-
     while(Cdata.size() != CdataSize){
         
         for(int j=0;j<aCols;j++){

@@ -1,0 +1,75 @@
+#include "ML\Matrix\Matrix.h"
+#include "ML\Neuron\Neuron.h"
+#include "ML\Layers\Layers.h"
+
+#include <iostream>
+
+int main(){
+    // Matrix a(1, 5, -1.0f, 1.0f);
+    // a.PrintMatrix();
+
+    Matrix b(10, 1, -1.0f, 1.0f);
+    b.PrintMatrix();
+
+    // Matrix c = matmul(a, b);
+    // c.PrintMatrix();
+
+    // Neuron First(5, "relu");
+
+    // float output = First.forward(b);
+    // std::cout << "Forward Pass: " << output << std::endl;
+
+    // First.info();
+
+    // a.PrintMatrix();
+    // Matrix d(1, 5, -1.0f, 1.0f);
+    // d.PrintMatrix();
+
+    // //Vstack
+    // std::cout << "Vstack: " <<std::endl;
+
+    // Matrix Vstack1(2, 3, -1.0f, 1.0f);
+    // Vstack1.PrintMatrix();
+
+    // Matrix Vstack2(5, 3, -1.0f, 1.0f);
+    // Vstack2.PrintMatrix();
+
+    // Matrix e = Vstack(Vstack1, Vstack2);
+    // e.PrintMatrix();
+
+    // //Hstack
+    // std::cout << "Hstack: " <<std::endl;
+
+    // Matrix Hstack1(2, 3, -1.0f, 1.0f);
+    // Hstack1.PrintMatrix();
+
+    // Matrix Hstack2(2, 5, -1.0f, 1.0f);
+    // Hstack2.PrintMatrix();
+
+    // Matrix f = Hstack(Hstack1, Hstack2);
+    // f.PrintMatrix();
+
+    Dense dense1(5, 10, "relu");
+    dense1.info();
+
+    Dense dense2(10, 5, "clippedrelu");
+    dense2.info();
+    
+    Matrix ForwardOutput = dense1.forward(b);
+    ForwardOutput.PrintMatrix();
+
+    Matrix ForwardOutput2 = dense2.forward(ForwardOutput);
+    ForwardOutput2.PrintMatrix();
+
+    std::cout << "Softmax: " << std::endl;
+
+    Matrix Softmax = dense2.Softmax();
+    Softmax.PrintMatrix();
+
+    int Class = dense2.Argmax();
+    std::cout << "This is of class: " << Class << std::endl;
+
+    std::cout << "Softmax Value is: " << dense2.GetSoftmaxValue(Class);
+}
+
+//g++ main.cpp ML/ActivationFunctions/Activation.cpp ML/Matrix/Matrix.cpp ML/Neuron/Neuron.cpp ML/RNG/RNG.cpp ML/Layers/Dense.cpp ML/Layers/Softmax.cpp

@@ -1,52 +1,62 @@
 #include "ML\Matrix\Matrix.h"
 #include "ML\Neuron\Neuron.h"
+#include "ML\Layers\Layers.h"
+
+#include "ML\GenerateTestData\GTD.h"
+#include "ML\LossFunctions\LossFunctions.h"
 
 #include <iostream>
+#include <cmath>
 
 int main(){
-    Matrix a(1, 5, -1.0f, 1.0f);
-    a.PrintMatrix();
+    std::vector<float> X_Values = GenerateXvalues(20, 0.1f, -10.0f, 10.0f);
+    std::vector<float> Y_Values = GenerateYvalues(2.0f, 3.0f, 13.0f, X_Values);
 
-    Matrix b(5, 1, -1.0f, 1.0f);
-    b.PrintMatrix();
+    LossPntr LossFunction = GetLossFunctionPtr("se");
 
-    Matrix c = matmul(a, b);
-    c.PrintMatrix();
+    int NOEPOCHS = 100;
 
-    Neuron First(5, "relu");
+    //initialise weights and biases
+    float a = getRandomNumber(-1.0f, 1.0f);
+    float b = getRandomNumber(-1.0f, 1.0f);
+    float c = getRandomNumber(-1.0f, 1.0f);
 
-    float output = First.forward(b);
-    std::cout << "Forward Pass: " << output << std::endl;
+    std::cout << "a " << a << std::endl;
+    std::cout << "b " << b << std::endl;
+    std::cout << "c" << c << std::endl;
 
-    First.info();
+    float lr = 0.00005f;
 
-    a.PrintMatrix();
-    Matrix d(1, 5, -1.0f, 1.0f);
-    d.PrintMatrix();
+    for(int i=0;i<NOEPOCHS;i++){
+        
+        float SE = 0.0f;
 
-    //Vstack
-    std::cout << "Vstack: " <<std::endl;
+        //Get the Squared Error of all the training examples
+        for(int j=0;j<X_Values.size();j++){
+            float X = X_Values[j];
+            float Y = Y_Values[j];
 
-    Matrix Vstack1(2, 3, -1.0f, 1.0f);
-    Vstack1.PrintMatrix();
+            float y_hat = a * std::pow(X, 2) + b * X + c;
 
-    Matrix Vstack2(5, 3, -1.0f, 1.0f);
-    Vstack2.PrintMatrix();
+            SE += LossFunction(Y, y_hat);
+        }
 
-    Matrix e = Vstack(Vstack1, Vstack2);
-    e.PrintMatrix();
+        float MSE = (1.0f / static_cast<float>(X_Values.size())) * SE;
 
-    //Hstack
-    // std::cout << "Hstack: " <<std::endl;
+        std::cout << "Epoch " << i << " MSE: " << MSE << std::endl;
 
-    // Matrix Hstack1(2, 3, -1.0f, 1.0f);
-    // Hstack1.PrintMatrix();
+        float dMSE = (-2.0f / static_cast<float>(X_Values.size())) * SE;
 
-    // Matrix Hstack2(2, 5, -1.0f, 1.0f);
-    // Hstack2.PrintMatrix();
+        //update weights 
+        a = a -lr * (a * dMSE);
+        std::cout << "a " << a << std::endl;
 
-    // Matrix f = Hstack(Hstack1, Hstack2);
-    // f.PrintMatrix();
+        b = b -lr * (b * dMSE);
+        std::cout << "b " << b << std::endl;
+
+        c = c -lr * (c * dMSE);
+        std::cout << "c " << c << std::endl;
+    }
 }
 
-//g++ main.cpp ML/ActivationFunctions/Activation.cpp ML/Matrix/Matrix.cpp ML/Neuron/Neuron.cpp ML/RNG/RNG.cpp
+//g++ main.cpp ML/ActivationFunctions/Activation.cpp ML/Matrix/Matrix.cpp ML/Neuron/Neuron.cpp ML/RNG/RNG.cpp ML/Layers/Dense.cpp ML/Layers/Softmax.cpp
